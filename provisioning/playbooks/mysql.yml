@@ -1,0 +1,44 @@
+---
+- hosts: all
+  sudo: yes
+  tasks:
+  - name: Install mysql
+    apt:
+      name: "{{ item }}"
+      state: installed
+      update_cache: yes
+    with_items:
+      - mysql-server
+      - mysql-client
+      - python-mysqldb
+      - libmysqlclient-dev
+
+  - name: Set root user password
+    mysql_user:
+      name: root
+      password: password
+      check_implicit_admin: true
+
+  - name: Create .my.cnf
+    template:
+      src: "templates/.my.cnf"
+      dest: "/root/.my.cnf"
+      owner: root
+      group: root
+      mode: 0600
+
+  - name: Ensure Anonymous user(s) are not in the database
+    mysql_user:
+      name: ''
+      host: localhost
+      state: absent
+
+  - name: Remove the test database
+    mysql_db:
+      name: test
+      state: absent
+
+  - name: Restart mysql
+    service:
+      name: mysql
+      state: restarted

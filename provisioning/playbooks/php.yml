@@ -1,0 +1,41 @@
+---
+- hosts: all
+  sudo: yes
+  tasks:
+  - name: Install php7
+    apt:
+      name: "{{ item }}"
+      state: installed
+      update_cache: yes
+    with_items:
+      - php7.0
+      - php7.0-fpm
+      - php7.0-cli
+      - php7.0-common
+      - php7.0-mbstring
+      - php7.0-gettext
+      - php7.0-gd
+      - php7.0-intl
+      - php7.0-xml
+      - php7.0-mysql
+      - php7.0-mcrypt
+      - php7.0-zip
+      - libapache2-mod-php7.0
+
+  - name: Enable rewrite module in apache2
+    apache2_module:
+      name: rewrite
+      state: present
+
+  - name: Enable mcrypt PHP module
+    command: phpenmod mcrypt
+
+  - name: Restart apache2
+    service:
+      name: apache2
+      state: restarted
+
+  - name: Restart php-fpm
+    service:
+      name: php7.0-fpm
+      state: restarted

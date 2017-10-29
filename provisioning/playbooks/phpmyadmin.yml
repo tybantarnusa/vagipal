@@ -1,0 +1,23 @@
+---
+- hosts: all
+  sudo: yes
+  tasks:
+    - name: Set phpmyadmin configuration
+      debconf: name={{ item.name }} question={{ item.question }} vtype={{ item.vtype }} value={{ item.value }}
+      with_items:
+        - { name: "phpmyadmin", question: "phpmyadmin/dbconfig-install", vtype: "boolean", value: true }
+        - { name: "phpmyadmin", question: "phpmyadmin/mysql/admin-user", vtype: "string", value: "root" }
+        - { name: "phpmyadmin", question: "phpmyadmin/mysql/admin-pass", vtype: "password", value: "" }
+        - { name: "phpmyadmin", question: "phpmyadmin/reconfigure-webserver", vtype: "multiselect", value: "" }
+
+    - name: Install phpmyadmin
+      apt:
+        name: phpmyadmin
+        state: installed
+        update_cache: yes
+
+    - name: Configure phpmyadmin site
+      file:
+        path: /var/www/html/phpmyadmin
+        src: /usr/share/phpmyadmin
+        state: link
