@@ -29,7 +29,7 @@ or if you don't have git installed:
 ```bash
 $ wget https://github.com/tybantarnusa/vagipal/archive/master.zip
 $ unzip master.zip
-$ mv ./master ./vagipal
+$ mv ./vagipal-master ./vagipal
 ```
 
 5. Go to Vagipal directory
