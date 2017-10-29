@@ -27,9 +27,9 @@ $ git clone https://github.com/tybantarnusa/vagipal.git
 ```
 or if you don't have git installed:
 ```bash
-$ wget ...
-$ tar -zxvf ...
-$ mv ... ./vagipal
+$ wget https://github.com/tybantarnusa/vagipal/archive/master.zip
+$ unzip master.zip
+$ mv ./master ./vagipal
 ```
 
 5. Go to Vagipal directory
