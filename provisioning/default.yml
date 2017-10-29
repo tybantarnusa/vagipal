@@ -4,3 +4,9 @@
 # Network settings
 hostname: vagipal.dev
 ip: 118.97.103.105
+
+# Database settings
+db_name: vagipal
+
+# Site settings
+site_name: "Vagipal Site"

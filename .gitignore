@@ -1,0 +1,9 @@
+.DS_Store
+.bundle
+.idea/
+.vagrant
+.ansible
+package.box
+playbook.retry
+provisioning/playbook.retry
+*.log

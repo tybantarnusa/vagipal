@@ -1,0 +1,54 @@
+---
+- hosts: all
+  become: true
+  tasks:
+  - name: Clean up root directory
+    file:
+      path: /var/www/html/index.html
+      state: absent
+
+  - name: Download drupal 7.56
+    get_url:
+      url: http://ftp.drupal.org/files/projects/drupal-7.56.tar.gz
+      dest: /var/www/html/drupal-7.56.tar.gz
+
+  - name: Extract drupal
+    unarchive:
+      src: /var/www/html/drupal-7.56.tar.gz
+      dest: /var/www/html/
+
+  - name: Move extracted drupal to root directory
+    shell: mv /var/www/html/drupal-7.56/* /var/www/html/drupal-7.56/.htaccess /var/www/html/drupal-7.56/.gitignore /var/www/html/
+
+  - name: Clean up drupal downloaded files
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      - /var/www/html/drupal-7.56.tar.gz
+      - /var/www/html/drupal-7.56
+
+  - name: Change some drupal directories permission
+    file:
+      path: /var/www/html/sites/default
+      mode: 0777
+
+  - name: Create database for drupal
+    mysql_db:
+      name: "{{ vagi.db_name | default('vagipal') }}"
+      state: present
+
+  - name: Install Drush
+    get_url:
+      url: https://github.com/drush-ops/drush/releases/download/8.1.15/drush.phar
+      dest: /usr/local/bin/drush
+
+  - name: Make Drush executable
+    file:
+      path: /usr/local/bin/drush
+      mode: 0755
+
+  - name: Install drupal
+    shell: drush -y site-install standard --db-url='mysql://root:password@localhost/{{ vagi.db_name | default("vagipal") }}' --site-name={{ vagi.site_name | default("Vagipal Site") }} --account-name=admin --account-pass=admin --root=/var/www/html
+    args:
+      chdir: /var/www/html/

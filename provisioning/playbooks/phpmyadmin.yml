@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  sudo: yes
+  become: true
   tasks:
     - name: Set phpmyadmin configuration
       debconf: name={{ item.name }} question={{ item.question }} vtype={{ item.vtype }} value={{ item.value }}

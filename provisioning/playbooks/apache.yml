@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  sudo: yes
+  become: true
   tasks:
   - name: Update repositories
     apt:
@@ -10,3 +10,11 @@
     apt:
       name: apache2
       state: installed
+
+  - name: Update apache2.conf
+    template:
+      src: "templates/apache2.conf"
+      dest: "/etc/apache2/apache2.conf"
+      owner: root
+      group: root
+      mode: 0644

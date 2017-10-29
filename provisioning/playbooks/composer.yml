@@ -1,0 +1,25 @@
+---
+- hosts: all
+  become: true
+  tasks:
+  - name: Install git
+    apt:
+      name: git
+      state: present
+
+  - name: Download composer
+    get_url:
+      url: https://getcomposer.org/installer
+      dest: ~/composer-setup.php
+
+  - name: Install composer
+    shell: "{{ item }}"
+    with_items:
+    - php ~/composer-setup.php
+    - mv composer.phar /usr/local/bin/composer
+    - export PATH="$HOME/.composer/vendor/bin:$PATH"
+
+  - name: Clean up composer installation
+    file:
+      path: ~/composer-setup.php
+      state: absent
